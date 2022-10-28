@@ -1,5 +1,5 @@
 # Changelog
-This document outlines all notable changes to this project thus far.
+This document outlines all notable changes to this project thus far. Inspired by https://keepachangelog.com/en/1.0.0/.
 
 ## [Unreleased]
 - Timer is currently being worked on. Latest version (0.0.2) is not functional.
