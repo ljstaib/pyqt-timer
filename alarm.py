@@ -2,10 +2,11 @@
 
 import sys
 import datetime
+import numpy as np
 
 from PyQt6.QtWidgets import QMainWindow, QPushButton, QApplication, QLabel, QLineEdit, QDialog
 from PyQt6.QtCore import QTimer, Qt
-from PyQt6.QtGui import QFont
+from PyQt6.QtGui import QFont, QIntValidator
 
 class TimeDialog(QDialog):
     def __init__(self, parent):
@@ -20,9 +21,14 @@ class TimeDialog(QDialog):
         self.hoursLabel.setText('Hours:')
         self.hoursLabel.setGeometry(25, 0, 200, 50)
 
+        # Check input so hours can only be 0-99, minutes: 0-59, seconds: 0-59
+        # TODO: Make minutes and seconds 0-59 instead of 0-99
         self.hoursIn = QLineEdit(self)
         self.hoursIn.move(85, 15)
         self.hoursIn.resize(200, 20)
+        hoursValidator = QIntValidator(0, 99, self)
+        self.hoursIn.setValidator(hoursValidator)
+        self.hoursIn.setMaxLength(2)
 
         self.minutesLabel = QLabel(self)
         self.minutesLabel.setText('Minutes:')
@@ -31,6 +37,9 @@ class TimeDialog(QDialog):
         self.minutesIn = QLineEdit(self)
         self.minutesIn.move(85, 45)
         self.minutesIn.resize(200, 20)
+        minsecValidator = QIntValidator(0, 59, self)
+        self.minutesIn.setValidator(minsecValidator)
+        self.minutesIn.setMaxLength(2)
 
         self.secondsLabel = QLabel(self)
         self.secondsLabel.setText('Seconds:')
@@ -39,6 +48,8 @@ class TimeDialog(QDialog):
         self.secondsIn = QLineEdit(self)
         self.secondsIn.move(85, 75)
         self.secondsIn.resize(200, 20)
+        self.secondsIn.setValidator(minsecValidator)
+        self.secondsIn.setMaxLength(2)
 
         self.cancelButton = QPushButton('Cancel', self)
         self.cancelButton.setGeometry(75, 105, 80, 40)
@@ -51,7 +62,6 @@ class TimeDialog(QDialog):
     def _sendInfo(self):
         # Retrieve number of hours, minutes, and seconds inputted and init timer
 
-        # TODO: Check input so hours can only be 0-99, minutes: 0-59, seconds: 0-59
         self.parent.hours = self.hoursIn.text()
         self.parent.minutes = self.minutesIn.text()
         self.parent.seconds = self.secondsIn.text()

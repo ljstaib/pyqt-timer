@@ -2,7 +2,7 @@
 This document outlines all notable changes to this project thus far. Inspired by https://keepachangelog.com/en/1.0.0/.
 
 ## [Unreleased]
-- Input parsing
+- Input parsing: hours works (0-99), minutes + seconds in progress (0-59)
 - Alarm when timer is done
 
 ## [0.1.0] - 2022-10-29
