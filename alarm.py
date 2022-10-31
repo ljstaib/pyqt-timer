@@ -2,7 +2,7 @@
 
 import sys
 import datetime
-import numpy as np
+from playsound import playsound
 
 from PyQt6.QtWidgets import QMainWindow, QPushButton, QApplication, QLabel, QLineEdit, QDialog
 from PyQt6.QtCore import QTimer, Qt
@@ -12,63 +12,91 @@ class TimeDialog(QDialog):
     def __init__(self, parent):
         super().__init__(parent=parent)
         self.setWindowTitle('Set Time')
-        self.setGeometry(100, 100, 300, 150)
+        self.setGeometry(100, 100, 300, 170)
         self.parent = parent
         self._getUI()
     
     def _getUI(self):
         self.hoursLabel = QLabel(self)
-        self.hoursLabel.setText('Hours:')
-        self.hoursLabel.setGeometry(25, 0, 200, 50)
+        self.hoursLabel.setText('Hours (0-99):')
+        self.hoursLabel.setGeometry(10, 0, 200, 50)
 
         # Check input so hours can only be 0-99, minutes: 0-59, seconds: 0-59
-        # TODO: Make minutes and seconds 0-59 instead of 0-99
         self.hoursIn = QLineEdit(self)
-        self.hoursIn.move(85, 15)
-        self.hoursIn.resize(200, 20)
+        self.hoursIn.move(115, 15)
+        self.hoursIn.resize(50, 20)
         hoursValidator = QIntValidator(0, 99, self)
         self.hoursIn.setValidator(hoursValidator)
         self.hoursIn.setMaxLength(2)
 
         self.minutesLabel = QLabel(self)
-        self.minutesLabel.setText('Minutes:')
-        self.minutesLabel.setGeometry(25, 30, 200, 50)
+        self.minutesLabel.setText('Minutes (0-59):')
+        self.minutesLabel.setGeometry(10, 30, 200, 50)
 
         self.minutesIn = QLineEdit(self)
-        self.minutesIn.move(85, 45)
-        self.minutesIn.resize(200, 20)
+        self.minutesIn.move(115, 45)
+        self.minutesIn.resize(50, 20)
         minsecValidator = QIntValidator(0, 59, self)
         self.minutesIn.setValidator(minsecValidator)
         self.minutesIn.setMaxLength(2)
 
         self.secondsLabel = QLabel(self)
-        self.secondsLabel.setText('Seconds:')
-        self.secondsLabel.setGeometry(25, 60, 200, 50)
+        self.secondsLabel.setText('Seconds (0-59):')
+        self.secondsLabel.setGeometry(10, 60, 200, 50)
 
         self.secondsIn = QLineEdit(self)
-        self.secondsIn.move(85, 75)
-        self.secondsIn.resize(200, 20)
+        self.secondsIn.move(115, 75)
+        self.secondsIn.resize(50, 20)
         self.secondsIn.setValidator(minsecValidator)
         self.secondsIn.setMaxLength(2)
 
         self.cancelButton = QPushButton('Cancel', self)
-        self.cancelButton.setGeometry(75, 105, 80, 40)
-        self.cancelButton.clicked.connect(self.close)
+        self.cancelButton.setGeometry(65, 125, 80, 40)
+        self.cancelButton.clicked.connect(self._cancelInfo)
 
         self.okButton = QPushButton('OK', self)
-        self.okButton.setGeometry(175, 105, 80, 40)
+        self.okButton.setGeometry(165, 125, 80, 40)
         self.okButton.clicked.connect(self._sendInfo)
+
+        self.errorLabel = QLabel(self)
+        self.errorLabel.setText('ERROR: Value/s out of range.')
+        self.errorLabel.setGeometry(10, 100, 300, 30)
+        self.errorLabel.hide()
+
+    def _clearInputs(self):
+        # Clear inputs and hide error text if it was there
+        self.errorLabel.hide()
+        self.hoursIn.setText("")
+        self.minutesIn.setText("")
+        self.secondsIn.setText("")
+
+    def _cancelInfo(self):
+        self._clearInputs()
+
+        self.close()
 
     def _sendInfo(self):
         # Retrieve number of hours, minutes, and seconds inputted and init timer
 
-        self.parent.hours = self.hoursIn.text()
-        self.parent.minutes = self.minutesIn.text()
-        self.parent.seconds = self.secondsIn.text()
+        if self.hoursIn.text() == "" or self.minutesIn.text() == "" or self.secondsIn.text() == "":
+            self.errorLabel.show()
+        else:
+            if int(self.minutesIn.text()) <= 59 and int(self.secondsIn.text()) <= 59:
+                # Gather input from user
+                self.parent.hours = self.hoursIn.text()
+                self.parent.minutes = self.minutesIn.text()
+                self.parent.seconds = self.secondsIn.text()
 
-        self.parent._initTimerValues()
+                # Send data to main window
+                self.parent._initTimerValues()
 
-        self.close()
+                self._clearInputs()
+
+                # Close window
+                self.close()  
+            else:
+                # Show error text
+                self.errorLabel.show()
 
 
 class Window(QMainWindow):
@@ -178,7 +206,8 @@ class Window(QMainWindow):
             if self.count == 0:
                 self.start = False
                 self.label.setText("00:00:00")
-                # TODO: Sound alarm!
+                # Sound alarm!
+                playsound('assets/sound/alarm.wav')
         
         if self.start:
             self._setTimer(self.count / 10)
