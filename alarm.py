@@ -1,12 +1,20 @@
 #!/usr/bin/python3
 
+"""
+Python Study Timer
+
+Simple timer program created in Python.
+
+Author: Luke Staib
+"""
+
 import sys
 import datetime
 from playsound import playsound
 
 from PyQt6.QtWidgets import QMainWindow, QPushButton, QApplication, QLabel, QLineEdit, QDialog
 from PyQt6.QtCore import QTimer, Qt
-from PyQt6.QtGui import QFont, QIntValidator
+from PyQt6.QtGui import QFont, QIntValidator, QAction
 
 class TimeDialog(QDialog):
     def __init__(self, parent):
@@ -72,7 +80,6 @@ class TimeDialog(QDialog):
 
     def _cancelInfo(self):
         self._clearInputs()
-
         self.close()
 
     def _sendInfo(self):
@@ -104,9 +111,33 @@ class Window(QMainWindow):
         super().__init__(parent=None)
 
         self.setWindowTitle('Study Timer')
-        self.setGeometry(100, 100, 400, 600)
+        # self.setGeometry(100, 100, 300, 180)
+        self.setFixedSize(300, 180)
         self.timeDialog = TimeDialog(self)
+        self._getMenuBar()
         self._getUI()
+
+    def _getMenuBar(self):
+        menuBar = self.menuBar()
+        menuBar.setNativeMenuBar(False)
+
+        timeMenuAction = QAction('&Set Time', self)
+        timeMenuAction.triggered.connect(self._getTime)
+        menuBar.addAction(timeMenuAction)
+
+        menuBar.addMenu('&Settings')
+
+        self.menuBar().setStyleSheet(
+        """
+        QMenuBar {
+            background-color: #fdfdfd;
+        }
+
+        QMenuBar::item::selected {
+            background-color: #efefef;
+        }
+        """
+        )
     
     def _getUI(self):
         # Variables
@@ -114,14 +145,17 @@ class Window(QMainWindow):
         self.hours, self.minutes, self.seconds = 0, 0, 0
         self.lastVal = 0
 
-        # Create button to set the length of the timer
-        self.setTimeButton = QPushButton('Set time', self)
-        self.setTimeButton.setGeometry(125, 100, 150, 50)
-        self.setTimeButton.clicked.connect(self._getTime)
+        # Set background color
+        self.setStyleSheet("background-color: #ededed;")
+
+        # Create button to set the length of the timer: made obsolete by menu button
+        # self.setTimeButton = QPushButton('Set time', self)
+        # self.setTimeButton.setGeometry(125, 100, 150, 50)
+        # self.setTimeButton.clicked.connect(self._getTime)
 
         # Create label to show time left
         self.label = QLabel("00:00:00", self)
-        self.label.setGeometry(50, 200, 300, 100)
+        self.label.setGeometry(0, 30, 300, 100)
         self.label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         # Formal time label
@@ -129,23 +163,27 @@ class Window(QMainWindow):
 
         # Create start button
         self.startButton = QPushButton("Start", self)
-        self.startButton.setGeometry(125, 350, 150, 40)
+        self.startButton.setGeometry(15, 130, 60, 40)
         self.startButton.clicked.connect(self._startTimer)
+        self.startButton.setStyleSheet("background-color: #f4f4f4;")
 
         # Create pause button
         self.pauseButton = QPushButton("Pause", self)
-        self.pauseButton.setGeometry(125, 400, 150, 40)
+        self.pauseButton.setGeometry(85, 130, 60, 40)
         self.pauseButton.clicked.connect(self._pauseTimer)
+        self.pauseButton.setStyleSheet("background-color: #f4f4f4;")
 
         # Create restart button
         self.restartButton = QPushButton("Restart", self)
-        self.restartButton.setGeometry(125, 450, 150, 40)
+        self.restartButton.setGeometry(155, 130, 60, 40)
         self.restartButton.clicked.connect(self._restartTimer)
+        self.restartButton.setStyleSheet("background-color: #f4f4f4;")
 
         # Create reset button
         self.resetButton = QPushButton("Reset", self)
-        self.resetButton.setGeometry(125, 500, 150, 40)
+        self.resetButton.setGeometry(225, 130, 60, 40)
         self.resetButton.clicked.connect(self._resetTimer)
+        self.resetButton.setStyleSheet("background-color: #f4f4f4;")
 
         # Create test button
         # self.resetButton = QPushButton("Test", self)

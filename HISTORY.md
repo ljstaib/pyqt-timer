@@ -2,9 +2,20 @@
 This document outlines all notable changes to this project thus far. Inspired by https://keepachangelog.com/en/1.0.0/.
 
 ## [Unreleased]
-- Custom alarm sounds
-- Upgraded UI
+- Settings menu button
+  - Custom alarm sounds
+  - Switch between light/dark theme
+- Need to fix alarm sound needing to play in full before user is given control of program again
 - More?
+
+## [0.1.2] - 2022-11-1
+### Added
+- Menu buttons "Settings" and "Set Time"
+  - "Settings" is currently non-functional
+  - "Set Time" replaced the "Set Time" button as a way to access the time input dialog
+
+### Changed
+- Made UI much more compact
 
 ## [0.1.1] - 2022-10-31
 ### Added
