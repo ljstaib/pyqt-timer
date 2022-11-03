@@ -4,9 +4,16 @@ This document outlines all notable changes to this project thus far. Inspired by
 ## [Unreleased]
 - Settings menu button
   - Custom alarm sounds
-  - Switch between light/dark theme
 - Need to fix alarm sound needing to play in full before user is given control of program again
+- Alarm needs to be able to run in the background (when app is not in focus)
 - More?
+
+## [0.1.3] - 2022-11-2
+### Added
+- Menu button "Themes" under Settings with "Light" and "Dark" themes
+  - Added 2 PyQT spreadsheet files
+  - Still working on coloring (right now too contrasting)
+  - Need to fix UI
 
 ## [0.1.2] - 2022-11-1
 ### Added
