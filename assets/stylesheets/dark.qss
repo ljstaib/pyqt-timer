@@ -1,5 +1,5 @@
 QMenuBar {
-    background-color: #020202;
+    background-color: #525252;
     color: #eeeeee;
 }
 
@@ -14,18 +14,18 @@ QPushButton {
 }
 
 QMainWindow {
-    background-color: #121212;
+    background-color: #323232;
 }
 
 QDialog {
-    background-color: #121212;
+    background-color: #323232;
 }
 
 QLineEdit {
-    background-color: #dddddd;
+    background-color: #777777;
 }
 
 QLabel {
-    background-color: #010101;
+    background-color: #212121;
     color: #eeeeee;
 }

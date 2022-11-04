@@ -36,8 +36,8 @@ class TimeDialog(QDialog):
     
     def _getUI(self):
         self.hoursLabel = QLabel(self)
-        self.hoursLabel.setText('Hours (0-99):')
-        self.hoursLabel.setGeometry(10, 0, 200, 50)
+        self.hoursLabel.setText('   Hours (0-99):')
+        self.hoursLabel.setGeometry(0, 0, 200, 50)
 
         # Check input so hours can only be 0-99, minutes: 0-59, seconds: 0-59
         self.hoursIn = QLineEdit(self)
@@ -49,11 +49,11 @@ class TimeDialog(QDialog):
         self.hoursIn.setMaxLength(2)
 
         self.minutesLabel = QLabel(self)
-        self.minutesLabel.setText('Minutes (0-59):')
-        self.minutesLabel.setGeometry(10, 35, 200, 50)
+        self.minutesLabel.setText('   Minutes (0-59):')
+        self.minutesLabel.setGeometry(0, 35, 200, 50)
 
         self.minutesIn = QLineEdit(self)
-        self.minutesIn.move(115, 45)
+        self.minutesIn.move(115, 50)
         self.minutesIn.resize(50, 20)
         
         minsecValidator = QIntValidator(0, 59, self)
@@ -61,11 +61,11 @@ class TimeDialog(QDialog):
         self.minutesIn.setMaxLength(2)
 
         self.secondsLabel = QLabel(self)
-        self.secondsLabel.setText('Seconds (0-59):')
-        self.secondsLabel.setGeometry(10, 70, 200, 50)
+        self.secondsLabel.setText('   Seconds (0-59):')
+        self.secondsLabel.setGeometry(0, 70, 200, 50)
 
         self.secondsIn = QLineEdit(self)
-        self.secondsIn.move(115, 90)
+        self.secondsIn.move(115, 85)
         self.secondsIn.resize(50, 20)
         self.secondsIn.setValidator(minsecValidator)
         self.secondsIn.setMaxLength(2)
@@ -79,15 +79,13 @@ class TimeDialog(QDialog):
         self.okButton.clicked.connect(self._sendInfo)
 
         self.errorLabel = QLabel(self)
-        self.errorLabel.setText('ERROR: Value/s out of range.')
+        self.errorLabel.setText("")
         self.errorLabel.setFont(QFont('Arial', 12))
-        self.errorLabel.setStyleSheet("color: red;")
-        self.errorLabel.setGeometry(5, 110, 200, 30)
-        self.errorLabel.hide()
+        self.errorLabel.setGeometry(0, 110, 200, 30)
 
     def _clearInputs(self):
         # Clear inputs and hide error text if it was there
-        self.errorLabel.hide()
+        self.errorLabel.setText("")
         self.hoursIn.setText("")
         self.minutesIn.setText("")
         self.secondsIn.setText("")
@@ -100,7 +98,7 @@ class TimeDialog(QDialog):
         # Retrieve number of hours, minutes, and seconds inputted and init timer
 
         if self.hoursIn.text() == "" or self.minutesIn.text() == "" or self.secondsIn.text() == "":
-            self.errorLabel.show()
+            self.errorLabel.setText('  ERROR: Value/s out of range.')
         else:
             if int(self.minutesIn.text()) <= 59 and int(self.secondsIn.text()) <= 59:
                 # Gather input from user
@@ -117,7 +115,7 @@ class TimeDialog(QDialog):
                 self.close()  
             else:
                 # Show error text
-                self.errorLabel.show()
+                self.errorLabel.setText('  ERROR: Value/s out of range.')
 
 
 class Window(QMainWindow):

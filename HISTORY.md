@@ -8,6 +8,10 @@ This document outlines all notable changes to this project thus far. Inspired by
 - Alarm needs to be able to run in the background (when app is not in focus)
 - More?
 
+## [0.1.4] - 2022-11-3
+### Fixed
+- Updated light and dark modes
+
 ## [0.1.3] - 2022-11-2
 ### Added
 - Menu button "Themes" under Settings with "Light" and "Dark" themes
