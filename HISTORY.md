@@ -3,11 +3,18 @@ This document outlines all notable changes to this project thus far. Inspired by
 
 ## [Unreleased]
 - Settings menu button
-  - Custom alarm sounds
-- Need to fix alarm sound needing to play in full before user is given control of program again
+- Preset alarm sounds
+- Need error checking with alarm sound file upload
 - Alarm needs to be able to run in the background (when app is not in focus)
 - More?
 
+## [0.1.5] - 2022-11-4
+### Added
+- "Change Alarm" button allows you to upload .mp3 or .wav files in place of the default alarm
+  
+### Fixed
+- Alarm no longer needs to play in full before user is given back control of program
+  
 ## [0.1.4] - 2022-11-3
 ### Fixed
 - Updated light and dark modes

@@ -10,10 +10,13 @@ Author: Luke Staib
 
 import sys
 import datetime
+import multiprocessing
 from playsound import playsound
+import shutil
+import os
 
-from PyQt6.QtWidgets import QMainWindow, QPushButton, QApplication, QLabel, QLineEdit, QDialog, QMenu
-from PyQt6.QtCore import QFile, QTimer, Qt, QTextStream
+from PyQt6.QtWidgets import QMainWindow, QPushButton, QApplication, QLabel, QLineEdit, QDialog, QMenu, QFileDialog
+from PyQt6.QtCore import QTimer, Qt
 from PyQt6.QtGui import QFont, QIntValidator, QAction
 
 def _changeStyle(path):
@@ -25,6 +28,17 @@ def _changeStyle(path):
     with open(path, 'r') as f:
         style = f.read()
         app.setStyleSheet(style)
+
+def _replaceAudio():
+    f_dlg = QFileDialog()
+    if f_dlg.exec():
+        fnames = f_dlg.selectedFiles()
+        check = fnames[0].split('.')
+        if check[1] == "mp3" or check[1] == "wav":
+            shutil.copyfile(fnames[0], "assets/sound/custom." + check[1])
+        else:
+            # TODO: error message to user
+            print("Bad file.")
 
 class TimeDialog(QDialog):
     def __init__(self, parent):
@@ -148,6 +162,10 @@ class Window(QMainWindow):
         themesMenu.addAction(lightAction)
         themesMenu.addAction(darkAction)
         settingsMenu.addMenu(themesMenu)
+
+        customSoundMenu = QAction('&Change Alarm', self)
+        customSoundMenu.triggered.connect(lambda: _replaceAudio())
+        settingsMenu.addAction(customSoundMenu)
     
     def _getUI(self):
         # Variables
@@ -248,7 +266,14 @@ class Window(QMainWindow):
                 self.start = False
                 self.label.setText("00:00:00")
                 # Sound alarm!
-                playsound('assets/sound/alarm.wav')
+                # Check for custom alarm
+                if os.path.exists('assets/sound/custom.mp3'):
+                    p = multiprocessing.Process(target=playsound, args=("assets/sound/custom.mp3",))
+                elif os.path.exists('assets/sound/custom.wav'):
+                    p = multiprocessing.Process(target=playsound, args=("assets/sound/custom.wav",))
+                else:
+                    p = multiprocessing.Process(target=playsound, args=("assets/sound/alarm.wav",))
+                p.start()
         
         if self.start:
             self._setTimer(self.count / 10)
