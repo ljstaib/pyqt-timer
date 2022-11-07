@@ -8,6 +8,10 @@ This document outlines all notable changes to this project thus far. Inspired by
 - Alarm needs to be able to run in the background (when app is not in focus)
 - More?
 
+## [0.1.6] - 2022-11-6
+### Fixed
+- "Change Alarm" button now tells user if they uploaded a custom audio file with a bad file type
+
 ## [0.1.5] - 2022-11-4
 ### Added
 - "Change Alarm" button allows you to upload .mp3 or .wav files in place of the default alarm

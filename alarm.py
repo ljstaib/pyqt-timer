@@ -15,7 +15,7 @@ from playsound import playsound
 import shutil
 import os
 
-from PyQt6.QtWidgets import QMainWindow, QPushButton, QApplication, QLabel, QLineEdit, QDialog, QMenu, QFileDialog
+from PyQt6.QtWidgets import QMainWindow, QPushButton, QApplication, QLabel, QLineEdit, QDialog, QMenu, QFileDialog, QErrorMessage
 from PyQt6.QtCore import QTimer, Qt
 from PyQt6.QtGui import QFont, QIntValidator, QAction
 
@@ -29,16 +29,26 @@ def _changeStyle(path):
         style = f.read()
         app.setStyleSheet(style)
 
+def _audioError():
+    eMsg = QErrorMessage()
+    eMsg.showMessage("Bad file type. Accepted types: mp3, wav.")
+    eMsg.exec()
+
 def _replaceAudio():
     f_dlg = QFileDialog()
     if f_dlg.exec():
         fnames = f_dlg.selectedFiles()
         check = fnames[0].split('.')
-        if check[1] == "mp3" or check[1] == "wav":
-            shutil.copyfile(fnames[0], "assets/sound/custom." + check[1])
-        else:
-            # TODO: error message to user
-            print("Bad file.")
+        if len(check) < 2:
+            # Typeless file
+            _audioError()
+        else:  
+            if check[1] == "mp3" or check[1] == "wav":
+                # Good file type: mp3 or wav
+                shutil.copyfile(fnames[0], "assets/sound/custom." + check[1])
+            else:
+                # Bad file type
+                _audioError()
 
 class TimeDialog(QDialog):
     def __init__(self, parent):
