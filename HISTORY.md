@@ -2,11 +2,17 @@
 This document outlines all notable changes to this project thus far. Inspired by https://keepachangelog.com/en/1.0.0/.
 
 ## [Unreleased]
-- Settings menu button
 - Preset alarm sounds
-- Need error checking with alarm sound file upload
-- Alarm needs to be able to run in the background (when app is not in focus)
-- More?
+- Fullscreen mode and/or scalable GUI
+- Multiple timers at once?
+
+## [0.1.7] - 2022-11-9
+### Changed
+- Sound menu updated. Still in progress and new presets need to be added.
+- Custom sound implementation flawed at the moment and needs to be fixed.
+  
+### Fixed
+- Verification: Timer runs perfectly fine in the background after more testing was done
 
 ## [0.1.6] - 2022-11-6
 ### Fixed

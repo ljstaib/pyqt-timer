@@ -19,6 +19,8 @@ from PyQt6.QtWidgets import QMainWindow, QPushButton, QApplication, QLabel, QLin
 from PyQt6.QtCore import QTimer, Qt
 from PyQt6.QtGui import QFont, QIntValidator, QAction
 
+sound_selected = "Alarm.wav" # select sound for timer enabled, default is "Alarm"
+
 def _changeStyle(path):
     app = QApplication.instance()
     if app is None:
@@ -29,12 +31,21 @@ def _changeStyle(path):
         style = f.read()
         app.setStyleSheet(style)
 
+def _selectAudio(str_in, isCustom):
+    if isCustom:
+        if os.path.isfile(str_in):
+            sound_selected = str_in
+        else:
+            sound_selected = "assets/sound/Alarm.wav"
+    else:
+        sound_selected = str_in
+
 def _audioError():
     eMsg = QErrorMessage()
     eMsg.showMessage("Bad file type. Accepted types: mp3, wav.")
     eMsg.exec()
 
-def _replaceAudio():
+def _customAudio(soundMenu):
     f_dlg = QFileDialog()
     if f_dlg.exec():
         fnames = f_dlg.selectedFiles()
@@ -44,8 +55,22 @@ def _replaceAudio():
             _audioError()
         else:  
             if check[1] == "mp3" or check[1] == "wav":
+                # Check if there is a custom file there already
+                isCustom = False
+                if os.path.isfile("assets/sound/Custom.wav") or os.path.isfile("assets/sound/Custom.mp3"):
+                    isCustom = True 
+
                 # Good file type: mp3 or wav
-                shutil.copyfile(fnames[0], "assets/sound/custom." + check[1])
+                shutil.copyfile(fnames[0], "assets/sound/Custom." + check[1])
+
+                # Add custom to menu if not there already
+                if not isCustom:
+                    temp = QAction('&Custom')
+                    temp.triggered.connect(lambda: _selectAudio("Custom." + check[1], True))
+                    soundMenu.addAction(temp)
+
+                # Refresh menu GUI
+
             else:
                 # Bad file type
                 _audioError()
@@ -146,7 +171,7 @@ class Window(QMainWindow):
     def __init__(self):
         super().__init__(parent=None)
 
-        self.setWindowTitle('Study Timer')
+        self.setWindowTitle('Timer')
         # self.setGeometry(100, 100, 300, 180)
         self.setFixedSize(300, 180)
         self.timeDialog = TimeDialog(self)
@@ -157,13 +182,16 @@ class Window(QMainWindow):
         menuBar = self.menuBar()
         menuBar.setNativeMenuBar(False)
 
+        # Set Time
         timeMenuAction = QAction('&Set Time', self)
         timeMenuAction.triggered.connect(self._getTime)
         menuBar.addAction(timeMenuAction)
 
+        # Settings
         settingsMenu = QMenu("&Settings", self)
         menuBar.addMenu(settingsMenu)
 
+        # Themes
         themesMenu = QMenu('&Themes', self)
         lightAction = QAction('&Light', self)
         lightAction.triggered.connect(lambda: _changeStyle("assets/stylesheets/light.qss"))
@@ -173,9 +201,27 @@ class Window(QMainWindow):
         themesMenu.addAction(darkAction)
         settingsMenu.addMenu(themesMenu)
 
-        customSoundMenu = QAction('&Change Alarm', self)
-        customSoundMenu.triggered.connect(lambda: _replaceAudio())
-        settingsMenu.addAction(customSoundMenu)
+        # Preset Sounds
+        soundMenu = QMenu('&Sounds', self)
+
+        for preset in os.listdir("assets/sound"):
+            check = preset.split('.')
+            if check[1] == "wav" or check[1] == "mp3":
+                preset_disp = check[0]
+                temp = QAction('&' + preset_disp, self)
+                temp.triggered.connect(lambda: _selectAudio(preset, False))
+                soundMenu.addAction(temp)
+        
+        if not os.path.isfile("assets/sound/Custom.wav") and not os.path.isfile("assets/sound/Custom.mp3"):
+            custom = QAction('&Custom', self)
+            custom.triggered.connect(lambda: _selectAudio("assets/sound/Custom", True))
+            soundMenu.addAction(custom)
+
+        # Custom Sound
+        customSound = QAction('&Add Custom...', self)
+        customSound.triggered.connect(lambda: _customAudio(soundMenu))
+        soundMenu.addAction(customSound)
+        settingsMenu.addMenu(soundMenu)
     
     def _getUI(self):
         # Variables
@@ -252,6 +298,7 @@ class Window(QMainWindow):
         # Pause timer
         self.start = False
 
+
     def _restartTimer(self):
         # Restart timer using last used hours, minutes, seconds values
         self.count, self.start = self.lastVal * 10, False
@@ -277,12 +324,8 @@ class Window(QMainWindow):
                 self.label.setText("00:00:00")
                 # Sound alarm!
                 # Check for custom alarm
-                if os.path.exists('assets/sound/custom.mp3'):
-                    p = multiprocessing.Process(target=playsound, args=("assets/sound/custom.mp3",))
-                elif os.path.exists('assets/sound/custom.wav'):
-                    p = multiprocessing.Process(target=playsound, args=("assets/sound/custom.wav",))
-                else:
-                    p = multiprocessing.Process(target=playsound, args=("assets/sound/alarm.wav",))
+                print(sound_selected)
+                p = multiprocessing.Process(target=playsound, args=("assets/sound/" + sound_selected,))
                 p.start()
         
         if self.start:
