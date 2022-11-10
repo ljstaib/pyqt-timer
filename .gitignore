@@ -1,1 +1,5 @@
 .DS_Store
+
+# Custom sounds
+/assets/sound/Custom.mp3
+/assets/sound/Custom.wav
