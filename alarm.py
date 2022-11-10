@@ -19,7 +19,7 @@ from PyQt6.QtWidgets import QMainWindow, QPushButton, QApplication, QLabel, QLin
 from PyQt6.QtCore import QTimer, Qt
 from PyQt6.QtGui import QFont, QIntValidator, QAction
 
-sound_selected = "Alarm.wav" # select sound for timer enabled, default is "Alarm"
+sound_selected = "assets/sound/Alarm.wav" # select sound for timer enabled, default is "Alarm"
 
 def _changeStyle(path):
     app = QApplication.instance()
@@ -32,13 +32,20 @@ def _changeStyle(path):
         app.setStyleSheet(style)
 
 def _selectAudio(str_in, isCustom):
+    global sound_selected
+    fullstr = "assets/sound/" + str_in
     if isCustom:
-        if os.path.isfile(str_in):
-            sound_selected = str_in
-        else:
+        if os.path.isfile(fullstr + ".wav"):
+            sound_selected = fullstr + ".wav"
+        elif os.path.isfile(fullstr + ".mp3"):
+            sound_selected = fullstr + ".mp3"
+        else: # If no custom sound, pick first preset
             sound_selected = "assets/sound/Alarm.wav"
     else:
-        sound_selected = str_in
+        if os.path.isfile(fullstr + ".wav"):
+            sound_selected = fullstr + ".wav"
+        else:
+            sound_selected = fullstr + ".mp3"
 
 def _audioError():
     eMsg = QErrorMessage()
@@ -146,9 +153,16 @@ class TimeDialog(QDialog):
     def _sendInfo(self):
         # Retrieve number of hours, minutes, and seconds inputted and init timer
 
-        if self.hoursIn.text() == "" or self.minutesIn.text() == "" or self.secondsIn.text() == "":
+        if self.hoursIn.text() == "" and self.minutesIn.text() == "" and self.secondsIn.text() == "":
             self.errorLabel.setText('  ERROR: Value/s out of range.')
         else:
+            if self.hoursIn.text() == "":
+                self.hoursIn.setText("0")
+            if self.minutesIn.text() == "":
+                self.minutesIn.setText("0")
+            if self.secondsIn.text() == "":
+                self.secondsIn.setText("0")
+
             if int(self.minutesIn.text()) <= 59 and int(self.secondsIn.text()) <= 59:
                 # Gather input from user
                 self.parent.hours = self.hoursIn.text()
@@ -204,18 +218,13 @@ class Window(QMainWindow):
         # Preset Sounds
         soundMenu = QMenu('&Sounds', self)
 
-        for preset in os.listdir("assets/sound"):
-            check = preset.split('.')
-            if check[1] == "wav" or check[1] == "mp3":
-                preset_disp = check[0]
-                temp = QAction('&' + preset_disp, self)
-                temp.triggered.connect(lambda: _selectAudio(preset, False))
-                soundMenu.addAction(temp)
-        
-        if not os.path.isfile("assets/sound/Custom.wav") and not os.path.isfile("assets/sound/Custom.mp3"):
-            custom = QAction('&Custom', self)
-            custom.triggered.connect(lambda: _selectAudio("assets/sound/Custom", True))
-            soundMenu.addAction(custom)
+        preset1 = QAction('&Alarm', self)
+        preset1.triggered.connect(lambda: _selectAudio("Alarm", False))
+        soundMenu.addAction(preset1)
+
+        custom = QAction('&Custom', self)
+        custom.triggered.connect(lambda: _selectAudio("Custom", True))
+        soundMenu.addAction(custom)
 
         # Custom Sound
         customSound = QAction('&Add Custom...', self)
@@ -325,7 +334,7 @@ class Window(QMainWindow):
                 # Sound alarm!
                 # Check for custom alarm
                 print(sound_selected)
-                p = multiprocessing.Process(target=playsound, args=("assets/sound/" + sound_selected,))
+                p = multiprocessing.Process(target=playsound, args=(sound_selected,))
                 p.start()
         
         if self.start:

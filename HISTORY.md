@@ -6,6 +6,15 @@ This document outlines all notable changes to this project thus far. Inspired by
 - Fullscreen mode and/or scalable GUI
 - Multiple timers at once?
 
+## [0.1.8] - 2022-11-10
+### Fixed
+- Custom sound implementation is fixed. To use a custom alarm sound, upload it with the "Add Custom..." button and use it with the "Custom" button under the "Sounds" menu.
+- Accepted filetypes are still .mp3 and .wav
+
+### Changed
+- For time entry window, a user can now leave 1 or 2 out of the 3 fields blank and they will be saved as 0's. If all 3 fields are blank, an error message is displayed.
+- Ex: only setting "5" under minutes will set the timer to 00:05:00 instead of leaving to an error.
+
 ## [0.1.7] - 2022-11-9
 ### Changed
 - Sound menu updated. Still in progress and new presets need to be added.
