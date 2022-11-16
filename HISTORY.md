@@ -2,9 +2,15 @@
 This document outlines all notable changes to this project thus far. Inspired by https://keepachangelog.com/en/1.0.0/.
 
 ## [Unreleased]
+- Fixing alarm in background
 - Preset alarm sounds
 - Fullscreen mode and/or scalable GUI
 - Multiple timers at once?
+
+## [0.1.9] - 2022-11-15
+### In Progress
+- Upon further use, the timer was having synchronization problems related to when the program was minimized/not in focus
+- Work is currently being done to fix this issue
 
 ## [0.1.8] - 2022-11-10
 ### Fixed

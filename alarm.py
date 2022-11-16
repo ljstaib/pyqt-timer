@@ -299,6 +299,8 @@ class Window(QMainWindow):
     def _startTimer(self):
         # Start timer
         self.start = True
+        self.start_time = datetime.datetime.now()
+        self.start_count = self.count
 
         if self.count == 0:
             self.start = False
@@ -307,15 +309,14 @@ class Window(QMainWindow):
         # Pause timer
         self.start = False
 
-
     def _restartTimer(self):
         # Restart timer using last used hours, minutes, seconds values
-        self.count, self.start = self.lastVal * 10, False
+        self.count, self.start, self.start_time = self.lastVal * 10, False, 0
         self._setTimer(self.lastVal)
 
     def _resetTimer(self):
         # Reset timer and all values
-        self.count, self.start, self.lastVal = 0, False, 0
+        self.count, self.start, self.lastVal, self.start_time = 0, False, 0, 0
         self.hours, self.minutes, self.seconds = 0, 0, 0
         self.label.setText("00:00:00")
 
@@ -325,10 +326,19 @@ class Window(QMainWindow):
 
     def _showTimer(self):
         # Used to update timer
+
         if self.start:
             self.count -= 1
 
-            if self.count == 0:
+            delta, temp = int((datetime.datetime.now() - self.start_time).total_seconds()), int((self.start_count / 10) - (self.count / 10))
+            print("Delta: ", delta)
+            print("Temp: ", temp)
+
+            if temp != delta:
+                print("INFO: Timer out of sync! Resynching...")
+                self.count = self.start_count - delta * 10
+
+            if self.count <= 0:
                 self.start = False
                 self.label.setText("00:00:00")
                 # Sound alarm!
@@ -337,7 +347,6 @@ class Window(QMainWindow):
                 p = multiprocessing.Process(target=playsound, args=(sound_selected,))
                 p.start()
         
-        if self.start:
             self._setTimer(self.count / 10)
     
     def _setTimer(self, secs_in):
