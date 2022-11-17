@@ -23,6 +23,7 @@ QDialog {
 
 QLineEdit {
     background-color: #777777;
+    color: #ffffff;
 }
 
 QLabel {

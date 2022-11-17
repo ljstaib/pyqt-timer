@@ -7,6 +7,18 @@ This document outlines all notable changes to this project thus far. Inspired by
 - Fullscreen mode and/or scalable GUI
 - Multiple timers at once?
 
+## [0.2.0] - 2022-11-17
+### Added
+- Ocean theme
+- New preset sound: SciFi
+
+### Changed
+- Tweaked dark theme to better show text in time entry dialog
+- Updated UI elements for a cleaner look
+
+### Fixed
+- Display bugs with new timer synchronization
+
 ## [0.1.9] - 2022-11-15
 ### In Progress
 - Upon further use, the timer was having synchronization problems related to when the program was minimized/not in focus

@@ -127,11 +127,12 @@ class TimeDialog(QDialog):
         self.secondsIn.setMaxLength(2)
 
         self.cancelButton = QPushButton('Cancel', self)
-        self.cancelButton.setGeometry(15, 150, 60, 30)
+        self.cancelButton.setGeometry(15, 150, 60, 40)
         self.cancelButton.clicked.connect(self._cancelInfo)
+        self.cancelButton.setAutoDefault(False)
 
         self.okButton = QPushButton('OK', self)
-        self.okButton.setGeometry(100, 150, 60, 30)
+        self.okButton.setGeometry(100, 150, 60, 40)
         self.okButton.clicked.connect(self._sendInfo)
 
         self.errorLabel = QLabel(self)
@@ -211,8 +212,13 @@ class Window(QMainWindow):
         lightAction.triggered.connect(lambda: _changeStyle("assets/stylesheets/light.qss"))
         darkAction = QAction('&Dark', self)
         darkAction.triggered.connect(lambda: _changeStyle("assets/stylesheets/dark.qss"))
+        oceanAction = QAction('&Ocean', self)
+        oceanAction.triggered.connect(lambda: _changeStyle("assets/stylesheets/ocean.qss"))
+
         themesMenu.addAction(lightAction)
         themesMenu.addAction(darkAction)
+        themesMenu.addAction(oceanAction)
+
         settingsMenu.addMenu(themesMenu)
 
         # Preset Sounds
@@ -221,6 +227,10 @@ class Window(QMainWindow):
         preset1 = QAction('&Alarm', self)
         preset1.triggered.connect(lambda: _selectAudio("Alarm", False))
         soundMenu.addAction(preset1)
+
+        preset2 = QAction('&SciFi', self)
+        preset2.triggered.connect(lambda: _selectAudio("SciFi", False))
+        soundMenu.addAction(preset2)
 
         custom = QAction('&Custom', self)
         custom.triggered.connect(lambda: _selectAudio("Custom", True))
@@ -245,7 +255,7 @@ class Window(QMainWindow):
 
         # Create label to show time left
         self.label = QLabel("00:00:00", self)
-        self.label.setGeometry(0, 30, 300, 100)
+        self.label.setGeometry(0, 25, 300, 105)
         self.label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         # Formal time label
@@ -253,22 +263,22 @@ class Window(QMainWindow):
 
         # Create start button
         self.startButton = QPushButton("Start", self)
-        self.startButton.setGeometry(15, 130, 60, 40)
+        self.startButton.setGeometry(15, 135, 60, 40)
         self.startButton.clicked.connect(self._startTimer)
 
         # Create pause button
         self.pauseButton = QPushButton("Pause", self)
-        self.pauseButton.setGeometry(85, 130, 60, 40)
+        self.pauseButton.setGeometry(85, 135, 60, 40)
         self.pauseButton.clicked.connect(self._pauseTimer)
 
         # Create restart button
         self.restartButton = QPushButton("Restart", self)
-        self.restartButton.setGeometry(155, 130, 60, 40)
+        self.restartButton.setGeometry(155, 135, 60, 40)
         self.restartButton.clicked.connect(self._restartTimer)
 
         # Create reset button
         self.resetButton = QPushButton("Reset", self)
-        self.resetButton.setGeometry(225, 130, 60, 40)
+        self.resetButton.setGeometry(225, 135, 60, 40)
         self.resetButton.clicked.connect(self._resetTimer)
 
         # Create test button
@@ -331,8 +341,6 @@ class Window(QMainWindow):
             self.count -= 1
 
             delta, temp = int((datetime.datetime.now() - self.start_time).total_seconds()), int((self.start_count / 10) - (self.count / 10))
-            print("Delta: ", delta)
-            print("Temp: ", temp)
 
             if temp != delta:
                 print("INFO: Timer out of sync! Resynching...")
@@ -346,8 +354,9 @@ class Window(QMainWindow):
                 print(sound_selected)
                 p = multiprocessing.Process(target=playsound, args=(sound_selected,))
                 p.start()
-        
-            self._setTimer(self.count / 10)
+
+            if temp != 1: # Temporary display fix to resynching when timer starts
+                self._setTimer(self.count / 10)
     
     def _setTimer(self, secs_in):
         # Used to format timer
