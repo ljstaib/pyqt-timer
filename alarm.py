@@ -26,7 +26,7 @@ def _changeStyle(path):
     if app is None:
         return
 
-    print(path)
+    # print(path)
     with open(path, 'r') as f:
         style = f.read()
         app.setStyleSheet(style)
@@ -343,7 +343,7 @@ class Window(QMainWindow):
             delta, temp = int((datetime.datetime.now() - self.start_time).total_seconds()), int((self.start_count / 10) - (self.count / 10))
 
             if temp != delta:
-                print("INFO: Timer out of sync! Resynching...")
+                print("[INFO] Timer out of sync! Resynching...")
                 self.count = self.start_count - delta * 10
 
             if self.count <= 0:
@@ -351,7 +351,7 @@ class Window(QMainWindow):
                 self.label.setText("00:00:00")
                 # Sound alarm!
                 # Check for custom alarm
-                print(sound_selected)
+                print("[INFO] Timer done!")
                 p = multiprocessing.Process(target=playsound, args=(sound_selected,))
                 p.start()
 

@@ -1,12 +1,6 @@
 # Changelog
 This document outlines all notable changes to this project thus far. Inspired by https://keepachangelog.com/en/1.0.0/.
 
-## [Unreleased]
-- Fixing alarm in background
-- Preset alarm sounds
-- Fullscreen mode and/or scalable GUI
-- Multiple timers at once?
-
 ## [0.2.0] - 2022-11-17
 ### Added
 - Ocean theme
