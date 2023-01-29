@@ -1,6 +1,9 @@
-# Study Alarm
+# Timer Program
 
-Luke Staib, 2022
+Luke Staib, 2023
+
+## About
+Simple timer made in Python using PyQt. Designed to be started in a terminal.
 
 ## Main Usage
 1. Install requirements with `pip install -r requirements.txt`.

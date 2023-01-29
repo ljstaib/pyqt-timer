@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 """
-Python Study Timer
+Python Timer
 
 Simple timer program created in Python.
 

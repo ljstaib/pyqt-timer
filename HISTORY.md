@@ -99,6 +99,6 @@ This document outlines all notable changes to this project thus far. Inspired by
 
 ## [0.0.1] - 2022-10-27
 ### Added
-- Started study timer project!
+- Started timer project!
 - Created basic UI in PyQT6
 - Users can enter a number of seconds for a basic timer
