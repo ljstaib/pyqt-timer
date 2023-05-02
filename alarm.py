@@ -214,10 +214,13 @@ class Window(QMainWindow):
         darkAction.triggered.connect(lambda: _changeStyle("assets/stylesheets/dark.qss"))
         oceanAction = QAction('&Ocean', self)
         oceanAction.triggered.connect(lambda: _changeStyle("assets/stylesheets/ocean.qss"))
+        flameAction = QAction('&Flame', self)
+        flameAction.triggered.connect(lambda: _changeStyle("assets/stylesheets/flame.qss"))
 
         themesMenu.addAction(lightAction)
         themesMenu.addAction(darkAction)
         themesMenu.addAction(oceanAction)
+        themesMenu.addAction(flameAction)
 
         settingsMenu.addMenu(themesMenu)
 

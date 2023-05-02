@@ -1,0 +1,32 @@
+QMenuBar {
+    background-color: #d62828;
+    color: #eae2b7;
+}
+
+QMenuBar::item::selected {
+    background-color: #f77f00;
+    color: #eae2b7;
+}
+
+QPushButton {
+    background-color: #d62828;
+    color: #eae2b7;
+}
+
+QMainWindow {
+    background-color: #f77f00;
+}
+
+QDialog {
+    background-color: #f77f00;
+}
+
+QLineEdit {
+    background-color: #eae2b7;
+    color: #d62828;
+}
+
+QLabel {
+    background-color: #fcbf49;
+    color: #d62828;
+}
